@@ -11,25 +11,6 @@ import { categories } from "../../services/apis"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropdown"
 
-// const subLinks = [
-//   {
-//     title: "Python",
-//     link: "/catalog/python",
-//   },
-//   {
-//     title: "javascript",
-//     link: "/catalog/javascript",
-//   },
-//   {
-//     title: "web-development",
-//     link: "/catalog/web-development",
-//   },
-//   {
-//     title: "Android Development",
-//     link: "/catalog/Android Development",
-//   },
-// ];
-
 function Navbar() {
   const { token } = useSelector((state) => state.auth)
   const { user } = useSelector((state) => state.profile)
@@ -44,6 +25,7 @@ function Navbar() {
       setLoading(true)
       try {
         const res = await apiConnector("GET", categories.CATEGORIES_API)
+        console.log("Printing Category: ", res)
         setSubLinks(res.data.data)
       } catch (error) {
         console.log("Could not fetch Categories.", error)
@@ -56,6 +38,10 @@ function Navbar() {
 
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
+  }
+
+  function handleNavBtn(e) {
+    e.preventDefault()
   }
 
   return (
@@ -89,7 +75,7 @@ function Navbar() {
                         <div className="absolute left-[50%] top-0 -z-10 h-6 w-6 translate-x-[80%] translate-y-[-40%] rotate-45 select-none rounded bg-richblack-5"></div>
                         {loading ? (
                           <p className="text-center">Loading...</p>
-                        ) : subLinks.length ? (
+                        ) : subLinks?.length ? (
                           <>
                             {subLinks
                               ?.filter(
@@ -131,6 +117,7 @@ function Navbar() {
             ))}
           </ul>
         </nav>
+
         {/* Login / Signup / Dashboard */}
         <div className="hidden items-center gap-x-4 md:flex">
           {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
@@ -159,8 +146,9 @@ function Navbar() {
           )}
           {token !== null && <ProfileDropdown />}
         </div>
+
         <button className="mr-4 md:hidden">
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
+          <AiOutlineMenu onClick={handleNavBtn} fontSize={24} fill="#AFB2BF" />
         </button>
       </div>
     </div>

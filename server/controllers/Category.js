@@ -77,16 +77,31 @@ exports.categoryPageDetails = async (req, res) => {
     const categoriesExceptSelected = await Category.find({
       _id: { $ne: categoryId },
     })
-    let differentCategory = await Category.findOne(
-      categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
-        ._id
-    )
-      .populate({
-        path: "courses",
-        match: { status: "Published" },
-      })
-      .exec()
-    console.log()
+
+    
+    let differentCategory = null
+    if (categoriesExceptSelected.length > 0) {
+      const randomIndex = getRandomInt(categoriesExceptSelected.length)
+      differentCategory = await Category.findById(
+        categoriesExceptSelected[randomIndex]._id
+      )
+        .populate({
+          path: "courses",
+          match: { status: "Published" },
+        })
+        .exec()
+    }
+    //Faced problem of NULL
+    // let differentCategory = await Category.findOne(
+    //   categoriesExceptSelected[getRandomInt(categoriesExceptSelected.length)]
+    //     ._id
+    // )
+    //   .populate({
+    //     path: "courses",
+    //     match: { status: "Published" },
+    //   })
+    //   .exec()
+    // console.log()
     // Get top-selling courses across all categories
     const allCategories = await Category.find()
       .populate({
