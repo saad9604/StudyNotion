@@ -1,8 +1,12 @@
 import { useEffect, useState } from "react"
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai"
+import {
+  AiOutlineClose,
+  AiOutlineMenu,
+  AiOutlineShoppingCart,
+} from "react-icons/ai"
 import { BsChevronDown } from "react-icons/bs"
 import { useSelector } from "react-redux"
-import { Link, matchPath, useLocation } from "react-router-dom"
+import { Link, Navigate, matchPath, useLocation, useNavigate } from "react-router-dom"
 
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
@@ -16,7 +20,7 @@ function Navbar() {
   const { user } = useSelector((state) => state.profile)
   const { totalItems } = useSelector((state) => state.cart)
   const location = useLocation()
-
+  const navigate = useNavigate()
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -34,15 +38,15 @@ function Navbar() {
     })()
   }, [])
 
-  // console.log("sub links", subLinks)
-
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname)
   }
 
-  function handleNavBtn(e) {
-    e.preventDefault()
+  function handleNavBtn() {
+    setIsMenuOpen(!isMenuOpen)
   }
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
     <div
@@ -150,6 +154,64 @@ function Navbar() {
         <button className="mr-4 md:hidden">
           <AiOutlineMenu onClick={handleNavBtn} fontSize={24} fill="#AFB2BF" />
         </button>
+
+        {isMenuOpen && (
+          <div className="fixed inset-0 z-50 flex flex-col items-center gap-10  bg-richblack-900 text-richblack-100">
+            <AiOutlineClose
+              onClick={handleNavBtn}
+              className="absolute right-8 top-4 h-6 w-6"
+            />
+
+            <div className="flex translate-y-60 justify-evenly gap-5">
+              {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+                <Link to="/dashboard/cart" onClick={handleNavBtn} className="relative">
+                  <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
+                  {totalItems > 0 && (
+                    <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
+                      {totalItems}
+                    </span>
+                  )}
+                </Link>
+              )}
+              {token === null && (
+                <Link to="/login" onClick={handleNavBtn}>
+                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                    Log in
+                  </button>
+                </Link>
+              )}
+              {token === null && (
+                <Link to="/signup" onClick={handleNavBtn}>
+                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                    Sign up
+                  </button>
+                </Link>
+              )}
+              {token !== null && (
+                <div onClick={handleNavBtn}>
+                  <img
+                    onClick={()=>{navigate("/dashboard/my-profile")}}
+                    src={user?.image}
+                    alt={`profile-${user?.firstName}`}
+                    className="aspect-square w-[30px] rounded-full object-cover"
+                    />
+                </div>
+              )}
+            </div>
+
+            <ul className="flex translate-y-60 flex-col gap-3 text-center text-lg text-richblack-100">
+              {NavbarLinks.map((link, index) => {
+                return (
+                  <div key={index}>
+                    <li onClick={handleNavBtn}>
+                      <Link to={link.path}>{link.title}</Link>
+                    </li>
+                  </div>
+                )
+              })}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   )
