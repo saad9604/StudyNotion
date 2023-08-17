@@ -36,10 +36,10 @@ function ReviewSlider() {
   // console.log(reviews)
 
   return (
-    <div className="text-white">
+    <div className="text-white w-full">
       <div className="my-[50px] h-[184px] max-w-maxContentTab lg:max-w-maxContent">
         <Swiper
-          slidesPerView={4}
+          slidesPerView={1}
           spaceBetween={25}
           loop={true}
           freeMode={true}
@@ -53,8 +53,8 @@ function ReviewSlider() {
           {reviews.map((review, i) => {
             return (
               <SwiperSlide key={i}>
-                <div className="flex flex-col gap-3 bg-richblack-800 p-3 text-[14px] text-richblack-25">
-                  <div className="flex items-center gap-4">
+                <div className=" flex flex-col  gap-3 lg:w-[400px] w-full mx-auto justify-center h-[170px] bg-richblack-800 p-3 text-[14px] text-richblack-25 ">
+                  <div className="flex items-center gap-4 justify-center">
                     <img
                       src={
                         review?.user?.image
@@ -65,13 +65,13 @@ function ReviewSlider() {
                       className="h-9 w-9 rounded-full object-cover"
                     />
                     <div className="flex flex-col">
-                      <h1 className="font-semibold text-richblack-5">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
+                      <h1 className="font-semibold text-richblack-5 text-[20px]">{`${review?.user?.firstName} ${review?.user?.lastName}`}</h1>
                       <h2 className="text-[12px] font-medium text-richblack-500">
                         {review?.course?.courseName}
                       </h2>
                     </div>
                   </div>
-                  <p className="font-medium text-richblack-25">
+                  <p className="font-medium text-richblack-25 text-center text-[15px]">
                     {review?.review.split(" ").length > truncateWords
                       ? `${review?.review
                           .split(" ")
@@ -79,14 +79,14 @@ function ReviewSlider() {
                           .join(" ")} ...`
                       : `${review?.review}`}
                   </p>
-                  <div className="flex items-center gap-2 ">
-                    <h3 className="font-semibold text-yellow-100">
+                  <div className="flex items-center gap-2 justify-center">
+                    <h3 className="font-semibold text-yellow-100 text-[20px]">
                       {review.rating.toFixed(1)}
                     </h3>
                     <ReactStars
                       count={5}
                       value={review.rating}
-                      size={20}
+                      size={30}
                       edit={false}
                       activeColor="#ffd700"
                       emptyIcon={<FaStar />}
