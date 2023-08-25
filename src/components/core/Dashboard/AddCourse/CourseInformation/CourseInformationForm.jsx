@@ -229,14 +229,14 @@ export default function CourseInformationForm() {
           {...register("courseCategory", { required: true })}
           defaultValue=""
           id="courseCategory"
-          className="form-style w-full"
+          className="form-style lg:w-full "
         >
           <option value="" disabled>
             Choose a Category
           </option>
           {!loading &&
             courseCategories?.map((category, indx) => (
-              <option key={indx} value={category?._id}>
+              <option  key={indx} value={category?._id} >
                 {category?.name}
               </option>
             ))}

@@ -25,7 +25,7 @@ export default function RenderSteps() {
 
   return (
     <>
-      <div className="relative mb-2 flex w-full justify-center">
+      <div className="relative mb-2 flex  lg:w-full justify-center">
         {steps.map((item) => (
           <>
             <div
@@ -60,16 +60,16 @@ export default function RenderSteps() {
         ))}
       </div>
 
-      <div className="relative mb-16 flex w-full select-none justify-between">
+      <div className="relative mb-6 lg:mb-16 flex w-full select-none justify-between">
         {steps.map((item) => (
           <>
             <div
-              className="flex min-w-[130px] flex-col items-center gap-y-2"
+              className="flex lg:min-w-[130px] flex-col items-center gap-y-2"
               key={item.id}
             >
               
               <p
-                className={`text-sm ${
+                className={`text-xs lg:text-sm ${
                   step >= item.id ? "text-richblack-5" : "text-richblack-500"
                 }`}
               >

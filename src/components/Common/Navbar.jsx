@@ -5,15 +5,24 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai"
 import { BsChevronDown } from "react-icons/bs"
-import { useSelector } from "react-redux"
-import { Link, Navigate, matchPath, useLocation, useNavigate } from "react-router-dom"
+import { VscSignOut } from "react-icons/vsc"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  Link,
+  Navigate,
+  matchPath,
+  useLocation,
+  useNavigate,
+} from "react-router-dom"
 
 import logo from "../../assets/Logo/Logo-Full-Light.png"
 import { NavbarLinks } from "../../data/navbar-links"
 import { apiConnector } from "../../services/apiConnector"
 import { categories } from "../../services/apis"
+import { logout } from "../../services/operations/authAPI"
 import { ACCOUNT_TYPE } from "../../utils/constants"
 import ProfileDropdown from "../core/Auth/ProfileDropdown"
+import ConfirmationModal from "./ConfirmationModal"
 
 function Navbar() {
   const { token } = useSelector((state) => state.auth)
@@ -21,8 +30,12 @@ function Navbar() {
   const { totalItems } = useSelector((state) => state.cart)
   const location = useLocation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
   const [subLinks, setSubLinks] = useState([])
   const [loading, setLoading] = useState(false)
+  const [confirmationModal, setConfirmationModal] = useState(null)
+  const [catalogOpen, setCatalogOpen] = useState(false)
 
   useEffect(() => {
     ;(async () => {
@@ -156,60 +169,147 @@ function Navbar() {
         </button>
 
         {isMenuOpen && (
-          <div className="fixed inset-0 z-50 flex flex-col items-center gap-10  bg-richblack-900 text-richblack-100">
-            <AiOutlineClose
-              onClick={handleNavBtn}
-              className="absolute right-8 top-4 h-6 w-6"
-            />
+          <div className="fixed inset-0 z-[1000] bg-white bg-opacity-10 backdrop-blur-sm">
+            <div className="fixed right-0 top-0 z-50 flex h-[100vh] w-[70%] flex-col items-start gap-10 bg-richblack-900 pl-10 text-richblack-100 transition-all  duration-300 ease-linear">
+              <AiOutlineClose
+                onClick={handleNavBtn}
+                className="absolute right-8 top-4 h-6 w-6"
+              />
 
-            <div className="flex translate-y-60 justify-evenly gap-5">
-              {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
-                <Link to="/dashboard/cart" onClick={handleNavBtn} className="relative">
-                  <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
-                  {totalItems > 0 && (
-                    <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
-                      {totalItems}
-                    </span>
-                  )}
-                </Link>
-              )}
-              {token === null && (
-                <Link to="/login" onClick={handleNavBtn}>
-                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                    Log in
-                  </button>
-                </Link>
-              )}
-              {token === null && (
-                <Link to="/signup" onClick={handleNavBtn}>
-                  <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
-                    Sign up
-                  </button>
-                </Link>
-              )}
-              {token !== null && (
-                <div onClick={handleNavBtn}>
-                  <img
-                    onClick={()=>{navigate("/dashboard/my-profile")}}
-                    src={user?.image}
-                    alt={`profile-${user?.firstName}`}
-                    className="aspect-square w-[30px] rounded-full object-cover"
+              <div className="flex translate-y-40 justify-evenly gap-5">
+                {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+                  <Link
+                    to="/dashboard/cart"
+                    onClick={handleNavBtn}
+                    className="relative"
+                  >
+                    <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
+                    {totalItems > 0 && (
+                      <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
+                        {totalItems}
+                      </span>
+                    )}
+                  </Link>
+                )}
+                {token === null && (
+                  <Link to="/login" onClick={handleNavBtn}>
+                    <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                      Log in
+                    </button>
+                  </Link>
+                )}
+                {token === null && (
+                  <Link to="/signup" onClick={handleNavBtn}>
+                    <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                      Sign up
+                    </button>
+                  </Link>
+                )}
+                {token !== null && (
+                  <div onClick={handleNavBtn}>
+                    <img
+                      onClick={() => {
+                        navigate("/dashboard/my-profile")
+                      }}
+                      src={user?.image}
+                      alt={`profile-${user?.firstName}`}
+                      className="aspect-square w-[30px] rounded-full object-cover"
                     />
+                  </div>
+                )}
+              </div>
+
+              <ul className="flex translate-y-40 flex-col gap-3 text-left text-lg text-richblack-100">
+                {NavbarLinks.map((link, index) => {
+                  return (
+                    <div key={index}>
+                      <li onClick={handleNavBtn}>
+                        {link.title === "Catalog" ? (
+                          <>
+                            <div
+                              onClick={(e) => {
+                                e.stopPropagation()
+                              }}
+                              className="mb-1 flex flex-col gap-2"
+                            >
+                              <div
+                                onClick={() => setCatalogOpen(!catalogOpen)}
+                                className="flex items-center gap-2"
+                              >
+                                <p>{link.title}</p>
+                                <BsChevronDown className="text-md rounded-full bg-richblack-100 p-1 text-richblack-900" />
+                              </div>
+                              {catalogOpen ? (
+                                <div className="flex flex-col gap-2">
+                                  {loading ? (
+                                    <p className="text-center">Loading...</p>
+                                  ) : subLinks?.length ? (
+                                    <>
+                                      {subLinks
+                                        ?.filter(
+                                          (subLink) =>
+                                            subLink?.courses?.length > 0
+                                        )
+                                        ?.map((subLink, i) => (
+                                          <Link
+                                            to={`/catalog/${subLink.name
+                                              .split(" ")
+                                              .join("-")
+                                              .toLowerCase()}`}
+                                            className="border-b-[1px] text-yellow-100 border-richblack-100  bg-transparent  pb-1 "
+                                            key={i}
+                                            onClick={handleNavBtn}
+                                          >
+                                            <p>{subLink.name}</p>
+                                          </Link>
+                                        ))}
+                                    </>
+                                  ) : (
+                                    <p className="text-center">
+                                      No Courses Found
+                                    </p>
+                                  )}
+                                </div>
+                              ) : (
+                                ""
+                              )}
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <Link to={link.path}>
+                              <p>{link.title}</p>
+                            </Link>
+                          </>
+                        )}
+                      </li>
+                    </div>
+                  )
+                })}
+              </ul>
+
+              <button
+                onClick={() =>
+                  setConfirmationModal({
+                    text1: "Are you sure?",
+                    text2: "You will be logged out of your account.",
+                    btn1Text: "Logout",
+                    btn2Text: "Cancel",
+                    btn1Handler: () => dispatch(logout(navigate)),
+                    btn2Handler: () => setConfirmationModal(null),
+                  })
+                }
+                className="translate-y-40 text-sm font-medium text-richblack-300"
+              >
+                <div className="flex items-center gap-x-2">
+                  <VscSignOut className="text-2xl" />
+                  <span>Logout</span>
                 </div>
+              </button>
+              {confirmationModal && (
+                <ConfirmationModal modalData={confirmationModal} />
               )}
             </div>
-
-            <ul className="flex translate-y-60 flex-col gap-3 text-center text-lg text-richblack-100">
-              {NavbarLinks.map((link, index) => {
-                return (
-                  <div key={index}>
-                    <li onClick={handleNavBtn}>
-                      <Link to={link.path}>{link.title}</Link>
-                    </li>
-                  </div>
-                )
-              })}
-            </ul>
           </div>
         )}
       </div>

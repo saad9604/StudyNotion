@@ -51,7 +51,7 @@ export default function Instructor() {
         <div className="spinner"></div>
       ) : courses.length > 0 ? (
         <div>
-          <div className="my-4 flex h-[450px] space-x-4">
+          <div className="my-4 flex flex-col gap-5 lg:gap-0 lg:flex-row lg:h-[450px] space-x-4">
             {/* Render chart / graph */}
             {totalAmount > 0 || totalStudents > 0 ? (
               <InstructorChart courses={instructorData} />
@@ -69,27 +69,27 @@ export default function Instructor() {
               <div className="mt-4 space-y-4">
                 <div>
                   <p className="text-lg text-richblack-200">Total Courses</p>
-                  <p className="text-3xl font-semibold text-richblack-50">
+                  <p className="text-2xl lg:text-3xl font-semibold text-richblack-50">
                     {courses.length}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg text-richblack-200">Total Students</p>
-                  <p className="text-3xl font-semibold text-richblack-50">
+                  <p className="text-2xl lg:text-3xl font-semibold text-richblack-50">
                     {totalStudents}
                   </p>
                 </div>
                 <div>
                   <p className="text-lg text-richblack-200">Total Income</p>
-                  <p className="text-3xl font-semibold text-richblack-50">
+                  <p className="text-2xl lg:text-3xl font-semibold text-richblack-50">
                     Rs. {totalAmount}
                   </p>
                 </div>
               </div>
             </div>
           </div>
+          {/* Render 3 courses */}
           <div className="rounded-md bg-richblack-800 p-6">
-            {/* Render 3 courses */}
             <div className="flex items-center justify-between">
               <p className="text-lg font-bold text-richblack-5">Your Courses</p>
               <Link to="/dashboard/my-courses">
