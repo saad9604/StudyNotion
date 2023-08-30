@@ -41,7 +41,7 @@ export default function CoursesTable({ courses, setCourses }) {
 
   return (
     <>
-      <Table className="rounded-xl border border-richblack-800 ">
+      <div className="rounded-xl border border-richblack-800 ">
         <div className="relative bottom-7 hidden text-richblack-100 lg:flex lg:justify-between lg:text-[0.9rem] ">
           <div className="ml-6">
             <p>COURSE</p>
@@ -55,7 +55,7 @@ export default function CoursesTable({ courses, setCourses }) {
           </div>
         </div>
 
-        <Tbody>
+        <div>
           {courses?.length === 0 ? (
             <Tr>
               <Td className="py-10 text-center text-2xl font-medium text-richblack-100">
@@ -67,16 +67,16 @@ export default function CoursesTable({ courses, setCourses }) {
             courses?.map((course) => (
               <div
                 key={course._id}
-                className="mx-auto border-b border-richblack-800 py-8 lg:flex lg:justify-between lg:px-6"
+                className="mx-auto border-b border-richblack-800 py-8  lg:flex lg:flex-row lg:justify-between lg:px-6"
               >
-                <div className="mx-auto flex flex-1 gap-5">
+                <div className="mx-auto flex flex-col gap-5 lg:flex-1 lg:flex-row ">
                   <img
                     src={course?.thumbnail}
                     alt={course?.courseName}
-                    className="h-[148px] min-w-[220px] rounded-lg object-cover lg:w-[100px]"
+                    className="h-[178px] object-contain px-[10px] lg:min-w-[220px] lg:rounded-lg lg:object-cover lg:p-0"
                   />
-                  <div className="flex flex-col justify-between">
-                    <p className="text-lg font-semibold text-richblack-5 ">
+                  <div className=" flex flex-col justify-between px-[30px]">
+                    <p className="text-sm font-semibold text-richblack-5 lg:text-lg ">
                       {course.courseName}
                     </p>
                     <p className="text-xs text-richblack-300">
@@ -107,7 +107,7 @@ export default function CoursesTable({ courses, setCourses }) {
                   </div>
                 </div>
 
-                <div className="mt-2  flex gap-2 lg:gap-14">
+                <div className="mt-2  flex gap-2 px-[30px] lg:gap-14">
                   <div className="text-sm font-medium text-richblack-100">
                     2hr 30min
                   </div>
@@ -152,8 +152,8 @@ export default function CoursesTable({ courses, setCourses }) {
               </div>
             ))
           )}
-        </Tbody>
-      </Table>
+        </div>
+      </div>
       {confirmationModal && <ConfirmationModal modalData={confirmationModal} />}
     </>
   )
