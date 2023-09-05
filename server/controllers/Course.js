@@ -356,6 +356,13 @@ exports.getFullCourseDetails = async (req, res) => {
         },
       })
       .populate("category")
+      .populate({
+        path: "assignmentsSubmitted",
+        populate: {
+          path: "student",
+          model: "user", // Replace 'Student' with the actual model name
+        },
+      })
       .populate("ratingAndReviews")
       .populate({
         path: "courseContent",

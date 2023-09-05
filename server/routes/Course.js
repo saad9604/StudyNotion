@@ -5,6 +5,8 @@ const router = express.Router()
 // Import the Controllers
 
 // Course Controllers Import
+const AssignmentController = require("../controllers/Assignment")
+
 const {
   createCourse,
   getAllCourses,
@@ -101,5 +103,17 @@ router.post("/getCategoryPageDetails", categoryPageDetails)
 router.post("/createRating", auth, isStudent, createRating)
 router.get("/getAverageRating", getAverageRating)
 router.get("/getReviews", getAllRatingReview)
+
+// ********************************************************************************************************
+//                                            Assignment
+// ********************************************************************************************************
+
+router.post("/assignment", auth, isStudent, AssignmentController.assignment)
+router.get(
+  "/getAllAssignments",
+  auth,
+  isInstructor,
+  AssignmentController.getAllAssignments
+)
 
 module.exports = router

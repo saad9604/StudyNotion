@@ -22,6 +22,8 @@ const {
   GET_FULL_COURSE_DETAILS_AUTHENTICATED,
   CREATE_RATING_API,
   LECTURE_COMPLETION_API,
+  SUBMIT_ASSIGNMENT_API,
+  GET_ALL_ASSIGNMENT_API,
 } = courseEndpoints
 
 export const getAllCourses = async () => {
@@ -381,8 +383,60 @@ export const createRating = async (data, token) => {
   } catch (error) {
     success = false
     console.log("CREATE RATING API ERROR............", error)
-    toast.error(error.message)
+    toast.error("Course already reviewed")
   }
   toast.dismiss(toastId)
   return success
+}
+
+// Submit Assignment
+export const submitAssignment = async (data, token) => {
+  let result = null
+  console.log("submit Assingment Data", data)
+  const toastId = toast.loading("Loading...")
+  try {
+    const response = await apiConnector("POST", SUBMIT_ASSIGNMENT_API, data, {
+      Authorization: `Bearer ${token}`,
+    })
+    console.log("SUBMIT_ASSIGNMENT API RESPONSE............", response)
+
+    if (!response.data.message) {
+      throw new Error(response.data.error)
+    }
+    toast.success("Assingment Submitted")
+    result = response?.data?.data
+  } catch (error) {
+    console.log("SUBMIT_ASSIGNMENT API ERROR............", error)
+    toast.error(error.message)
+  }
+  toast.dismiss(toastId)
+  return result
+}
+
+// Get All Assignment
+export const getAllAssignments = async (courseId, token) => {
+  let result = null
+  console.log("Get All Assingment Data", courseId)
+  const toastId = toast.loading("Loading...")
+  try {
+    const response = await apiConnector(
+      "GET",
+      GET_ALL_ASSIGNMENT_API,
+      courseId,
+      {
+        Authorization: `Bearer ${token}`,
+      }
+    )
+    console.log("GET_ALL_ASSIGNMENT_API API RESPONSE............", response)
+
+    if (!response.data.message) {
+      throw new Error(response.data.error)
+    }
+    result = response?.data?.data
+  } catch (error) {
+    console.log("GET_ALL_ASSIGNMENT_API API ERROR............", error)
+    toast.error(error.message)
+  }
+  toast.dismiss(toastId)
+  return result
 }

@@ -33,7 +33,6 @@ export default function CourseBuilderForm() {
 
   // handle form submission
   const onSubmit = async (data) => {
-    // console.log(data)
     setLoading(true)
 
     let result
@@ -47,7 +46,6 @@ export default function CourseBuilderForm() {
         },
         token
       )
-      // console.log("edit", result)
     } else {
       result = await createSection(
         {
@@ -147,7 +145,7 @@ export default function CourseBuilderForm() {
       <div className="flex justify-end gap-x-3">
         <button
           onClick={goBack}
-          className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 py-[8px] px-[20px] font-semibold text-richblack-900`}
+          className={`flex cursor-pointer items-center gap-x-2 rounded-md bg-richblack-300 px-[20px] py-[8px] font-semibold text-richblack-900`}
         >
           Back
         </button>

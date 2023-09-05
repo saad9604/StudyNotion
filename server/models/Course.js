@@ -46,6 +46,12 @@ const coursesSchema = new mongoose.Schema({
       ref: "user",
     },
   ],
+  assignmentsSubmitted: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Assignment",
+    },
+  ],
   instructions: {
     type: [String],
   },

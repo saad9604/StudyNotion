@@ -1,4 +1,5 @@
 import { useEffect } from "react"
+
 import "./App.css"
 // Redux
 import { useDispatch, useSelector } from "react-redux"
@@ -17,6 +18,7 @@ import Instructor from "./components/core/Dashboard/Instructor"
 import MyCourses from "./components/core/Dashboard/MyCourses"
 import MyProfile from "./components/core/Dashboard/MyProfile"
 import Settings from "./components/core/Dashboard/Settings"
+import ViewSubmissions from "./components/core/Dashboard/ViewSubmissions"
 import VideoDetails from "./components/core/ViewCourse/VideoDetails"
 import About from "./pages/About"
 import Catalog from "./pages/Catalog"
@@ -113,6 +115,10 @@ function App() {
           {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (
             <>
               <Route path="dashboard/instructor" element={<Instructor />} />
+              <Route
+                path="dashboard/viewSubmissions/:courseId/*"
+                element={<ViewSubmissions />}
+              />
               <Route path="dashboard/my-courses" element={<MyCourses />} />
               <Route path="dashboard/add-course" element={<AddCourse />} />
               <Route
