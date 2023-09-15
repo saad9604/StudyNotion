@@ -25,7 +25,7 @@ function Course_Card({ course, Height }) {
             <img
               src={course?.thumbnail}
               alt="course thumnail"
-              className={`${Height} w-full rounded-xl object-cover `}
+              className={`lg:${Height} lg:w-full w-[300px] lg:ml-0 ml-[25px] rounded-xl object-cover `}
             />
           </div>
           <div className="flex flex-col gap-2 px-1 py-3">
