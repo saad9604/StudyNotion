@@ -288,24 +288,26 @@ function Navbar() {
                 })}
               </ul>
 
-              <button
-                onClick={() =>
-                  setConfirmationModal({
-                    text1: "Are you sure?",
-                    text2: "You will be logged out of your account.",
-                    btn1Text: "Logout",
-                    btn2Text: "Cancel",
-                    btn1Handler: () => dispatch(logout(navigate)),
-                    btn2Handler: () => setConfirmationModal(null),
-                  })
-                }
-                className="translate-y-40 text-sm font-medium text-richblack-300"
-              >
-                <div className="flex items-center gap-x-2">
-                  <VscSignOut className="text-2xl" />
-                  <span>Logout</span>
-                </div>
-              </button>
+              {token &&
+                <button
+                  onClick={() =>
+                    setConfirmationModal({
+                      text1: "Are you sure?",
+                      text2: "You will be logged out of your account.",
+                      btn1Text: "Logout",
+                      btn2Text: "Cancel",
+                      btn1Handler: () => dispatch(logout(navigate)),
+                      btn2Handler: () => setConfirmationModal(null),
+                    })
+                  }
+                  className="translate-y-40 text-sm font-medium text-richblack-300"
+                >
+                  <div className="flex items-center gap-x-2">
+                    <VscSignOut className="text-2xl" />
+                    <span>Logout</span>
+                  </div>
+                </button>
+              }  
               {confirmationModal && (
                 <ConfirmationModal modalData={confirmationModal} />
               )}

@@ -6,6 +6,7 @@ const otpGenerator = require("otp-generator")
 const mailSender = require("../utils/mailSender")
 const { passwordUpdated } = require("../mail/templates/passwordUpdate")
 const Profile = require("../models/Profile")
+const StudentDetails = require("../models/StudentDetails")
 require("dotenv").config()
 
 // Signup Controller for Registering USers
@@ -86,6 +87,16 @@ exports.signup = async (req, res) => {
       about: null,
       contactNumber: null,
     })
+    const studentDet = await StudentDetails.create({
+      student: null,
+      age: null,
+      experience: null,
+      learn: null,
+      interest: null,
+      spendTime: null,
+      year: null,
+      department: null,
+    })
     const user = await User.create({
       firstName,
       lastName,
@@ -96,8 +107,10 @@ exports.signup = async (req, res) => {
       approved: approved,
       additionalDetails: profileDetails._id,
       image: "",
+      submittedStudentDetails: false,
+      studentDetails: studentDet._id
     })
-
+    user.populate("studentDetails")
     return res.status(200).json({
       success: true,
       user,
@@ -128,8 +141,7 @@ exports.login = async (req, res) => {
     }
 
     // Find user with provided email
-    const user = await User.findOne({ email }).populate("additionalDetails")
-
+    const user = await User.findOne({ email }).populate("additionalDetails").populate("studentDetails")
     // If user not found with provided email
     if (!user) {
       // Return 401 Unauthorized status code with error message

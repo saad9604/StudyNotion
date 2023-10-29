@@ -18,9 +18,21 @@ function Catalog() {
   const [active, setActive] = useState(1)
   const [CatalogPageData, setCatalogPageData] = useState(null)
   const [categoryId, setCategoryId] = useState("")
+  const { user } = useSelector((state) => state.profile)
+
+  const courses = CatalogPageData?.data?.selectedCategory?.courses
+  const userDetails = user?.studentDetails
+  const selectedCategoryByUser = CatalogPageData?.data?.selectedCategory?.name
+  const matchingCourses = courses?.filter(
+    (course) =>
+      course?.courseLevel === userDetails?.experience &&
+      course?.department === userDetails?.department &&
+      course?.year === userDetails?.year
+  )
+
   // Fetch All Categories
   useEffect(() => {
-    ;(async () => {
+    ; (async () => {
       try {
         const res = await apiConnector("GET", categories.CATEGORIES_API)
 
@@ -35,11 +47,12 @@ function Catalog() {
   }, [catalogName])
   useEffect(() => {
     if (categoryId) {
-      ;(async () => {
+      ; (async () => {
         try {
           const res = await getCatalogPageData(categoryId)
           setCatalogPageData(res)
-          console.log(res)
+          console.log("FullREsponse", res)
+          console.log("Printing User", user)
         } catch (error) {
           console.log(error)
         }
@@ -79,34 +92,35 @@ function Catalog() {
       </div>
 
       {/* Section 1 */}
+
       <div className=" mx-auto box-content w-full max-w-maxContentTab px-4 py-12 lg:max-w-maxContent">
         <div className="section_heading">Courses to get you started</div>
         <div className="my-4 flex border-b border-b-richblack-600 text-sm">
           <p
-            className={`px-4 py-2 ${
-              active === 1
+            className={`px-4 py-2 ${active === 1
                 ? "border-b border-b-yellow-25 text-yellow-25"
                 : "text-richblack-50"
-            } cursor-pointer`}
+              } cursor-pointer`}
             onClick={() => setActive(1)}
           >
             Most Populer
           </p>
           <p
-            className={`px-4 py-2 ${
-              active === 2
+            className={`px-4 py-2 ${active === 2
                 ? "border-b border-b-yellow-25 text-yellow-25"
                 : "text-richblack-50"
-            } cursor-pointer`}
+              } cursor-pointer`}
             onClick={() => setActive(2)}
           >
             New
           </p>
         </div>
         <div>
-          <Course_Slider
-            Courses={CatalogPageData?.data?.selectedCategory?.courses}
-          />
+          {selectedCategoryByUser === "SPPU syllabus" && user.accountType === "Student" ? (
+            <Course_Slider Courses={matchingCourses} />
+          ) : (
+            <Course_Slider Courses={courses} />
+          )}
         </div>
       </div>
       {/* Section 2 */}
@@ -132,11 +146,11 @@ function Catalog() {
                 <Course_Card course={course} key={i} Height={"h-[250px]"} />
               ))}
           </div> */}
-           <div>
-          <Course_Slider
-            Courses={CatalogPageData?.data?.mostSellingCourses}
-          />
-        </div>
+          <div>
+            <Course_Slider
+              Courses={CatalogPageData?.data?.mostSellingCourses}
+            />
+          </div>
         </div>
       </div>
 

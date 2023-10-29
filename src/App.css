@@ -42,7 +42,9 @@ details > summary {
 details > summary::-webkit-details-marker {
   display: none;
 }
-
+.disable-scroll {
+  overflow: hidden;
+}
 /* https://10015.io/tools/css-loader-generator */
 .spinner {
   width: 56px;

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Route, Routes, useNavigate } from "react-router-dom"
 
 // Components
+import ChatBot from "./components/Common/Chatbot"
 import Navbar from "./components/Common/Navbar"
 import OpenRoute from "./components/core/Auth/OpenRoute"
 import PrivateRoute from "./components/core/Auth/PrivateRoute"
@@ -36,6 +37,7 @@ import VerifyEmail from "./pages/VerifyEmail"
 import ViewCourse from "./pages/ViewCourse"
 import { getUserDetails } from "./services/operations/profileAPI"
 import { ACCOUNT_TYPE } from "./utils/constants"
+import StudentsDetailsForm from "./pages/StudentsDetailsForm"
 
 function App() {
   const dispatch = useDispatch()
@@ -53,6 +55,7 @@ function App() {
   return (
     <div className="flex min-h-screen w-screen flex-col bg-richblack-900 font-inter">
       <Navbar />
+      <ChatBot />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
@@ -110,6 +113,8 @@ function App() {
         >
           {/* Route for all users */}
           <Route path="dashboard/my-profile" element={<MyProfile />} />
+          <Route path="dashboard/StudentForm" element={<StudentsDetailsForm />} />
+
           <Route path="dashboard/Settings" element={<Settings />} />
           {/* Route only for Instructors */}
           {user?.accountType === ACCOUNT_TYPE.INSTRUCTOR && (

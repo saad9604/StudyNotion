@@ -39,6 +39,15 @@ const coursesSchema = new mongoose.Schema({
     // required: true,
     ref: "Category",
   },
+  year: {
+    type: String,
+  },
+  department: {
+    type: String
+  },
+  courseLevel: {
+    type: String
+  },
   studentsEnroled: [
     {
       type: mongoose.Schema.Types.ObjectId,

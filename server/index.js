@@ -4,6 +4,7 @@ const app = express();
 const userRoutes = require("./routes/user");
 const profileRoutes = require("./routes/profile");
 const courseRoutes = require("./routes/Course");
+const chatRoute = require("./routes/OpenAi");
 const paymentRoutes = require("./routes/Payments");
 const contactUsRoute = require("./routes/Contact");
 const database = require("./config/database");
@@ -47,6 +48,8 @@ app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 app.use("/api/v1/reach", contactUsRoute);
+app.use("/api/v1/chat", chatRoute);
+
 
 // Testing the server
 app.get("/", (req, res) => {

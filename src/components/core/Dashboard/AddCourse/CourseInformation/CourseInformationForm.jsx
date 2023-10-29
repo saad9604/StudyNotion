@@ -70,7 +70,7 @@ export default function CourseInformationForm() {
       currentValues.courseBenefits !== course.whatYouWillLearn ||
       currentValues.courseCategory._id !== course.category._id ||
       currentValues.courseRequirements.toString() !==
-        course.instructions.toString() ||
+      course.instructions.toString() ||
       currentValues.courseImage !== course.thumbnail
     ) {
       return true
@@ -80,13 +80,9 @@ export default function CourseInformationForm() {
 
   //   handle next button click
   const onSubmit = async (data) => {
-    // console.log(data)
 
     if (editCourse) {
-      // const currentValues = getValues()
-      // console.log("changes after editing form values:", currentValues)
-      // console.log("now course:", course)
-      // console.log("Has Form Changed:", isFormUpdated())
+
       if (isFormUpdated()) {
         const currentValues = getValues()
         const formData = new FormData()
@@ -107,6 +103,15 @@ export default function CourseInformationForm() {
         if (currentValues.courseBenefits !== course.whatYouWillLearn) {
           formData.append("whatYouWillLearn", data.courseBenefits)
         }
+        if (currentValues.courseLevel !== course.courseLevel) {
+          formData.append("courseLevel", data.courseLevel)
+        }
+        if (currentValues.courseLevel !== course.courseLevel) {
+          formData.append("year", data.year)
+        }
+        if (currentValues.courseLevel !== course.courseLevel) {
+          formData.append("department", data.department)
+        }
         if (currentValues.courseCategory._id !== course.category._id) {
           formData.append("category", data.courseCategory)
         }
@@ -122,7 +127,7 @@ export default function CourseInformationForm() {
         if (currentValues.courseImage !== course.thumbnail) {
           formData.append("thumbnailImage", data.courseImage)
         }
-        // console.log("Edit Form data: ", formData)
+        console.log("Edit Form data: ", data)
         setLoading(true)
         const result = await editCourseDetails(formData, token)
         setLoading(false)
@@ -143,9 +148,13 @@ export default function CourseInformationForm() {
     formData.append("tag", JSON.stringify(data.courseTags))
     formData.append("whatYouWillLearn", data.courseBenefits)
     formData.append("category", data.courseCategory)
+    formData.append("courseLevel", data.courseLevel)
+    formData.append("year", data.year)
+    formData.append("department", data.department)
     formData.append("status", COURSE_STATUS.DRAFT)
     formData.append("instructions", JSON.stringify(data.courseRequirements))
     formData.append("thumbnailImage", data.courseImage)
+    console.log("FORM DATA: ", data)
     setLoading(true)
     const result = await addCourseDetails(formData, token)
     if (result) {
@@ -236,7 +245,7 @@ export default function CourseInformationForm() {
           </option>
           {!loading &&
             courseCategories?.map((category, indx) => (
-              <option  key={indx} value={category?._id} >
+              <option key={indx} value={category?._id} >
                 {category?.name}
               </option>
             ))}
@@ -247,6 +256,100 @@ export default function CourseInformationForm() {
           </span>
         )}
       </div>
+
+      {/* Course Level */}
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm text-richblack-5" htmlFor="courseLevel">
+          Course Level <sup className="text-pink-200">*</sup>
+        </label>
+        <select
+          {...register("courseLevel", { required: true })}
+          defaultValue=""
+          id="courseLevel"
+          className="form-style lg:w-full "
+        >
+          <option value="" disabled>
+            Choose a Level
+          </option>
+          <option value="Beginner" >
+            Beginner
+          </option>
+          <option value="Intermediate" >
+            Intermediate
+          </option>
+          <option value="Experienced" >
+            Experienced
+          </option>
+
+        </select>
+        {errors.courseLevel && (
+          <span className="ml-2 text-xs tracking-wide text-pink-200">
+            Course Level is required
+          </span>
+        )}
+      </div>
+
+      {/* Year */}
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm text-richblack-5" htmlFor="year">
+          Year (Optional)
+        </label>
+        <select
+          {...register("year", { required: false })}
+          defaultValue=""
+          id="year"
+          className="form-style lg:w-full "
+        >
+          <option value="" disabled>
+            Choose Year
+          </option>
+          <option value="FE" >
+            FE
+          </option>
+          <option value="SE" >
+            SE
+          </option>
+          <option value="TE" >
+            TE
+          </option>
+          <option value="BE" >
+            BE
+          </option>
+        </select>
+      </div>
+
+      {/* Department */}
+      <div className="flex flex-col space-y-2">
+        <label className="text-sm text-richblack-5" htmlFor="department">
+          Department (Optional)
+        </label>
+        <select
+          {...register("department", { required: false })}
+          defaultValue=""
+          id="department"
+          className="form-style lg:w-full "
+        >
+          <option value="" disabled>
+            Choose Department
+          </option>
+          <option value="Information Technology" >
+            Information Technology
+          </option>
+          <option value="Computer" >
+            Computer
+          </option>
+          <option value="Civil" >
+            Civil
+          </option>
+          <option value="Mechanical" >
+            Mechanical
+          </option>
+          <option value="Others" >
+            Others
+          </option>
+        </select>
+      </div>
+
       {/* Course Tags */}
       <ChipInput
         label="Tags"

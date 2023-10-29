@@ -67,6 +67,11 @@ const userSchema = new mongoose.Schema(
         ref: "courseProgress",
       },
     ],
+    submittedStudentDetails: { type: Boolean },
+    studentDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StudentDetails"
+    }
 
     // Add timestamps for when the document is created and last modified
   },

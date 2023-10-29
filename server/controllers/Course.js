@@ -20,6 +20,9 @@ exports.createCourse = async (req, res) => {
       price,
       tag: _tag,
       category,
+      year,
+      department,
+      courseLevel,
       status,
       instructions: _instructions,
     } = req.body
@@ -42,6 +45,7 @@ exports.createCourse = async (req, res) => {
       !tag.length ||
       !thumbnail ||
       !category ||
+      !courseLevel ||
       !instructions.length
     ) {
       return res.status(400).json({
@@ -87,6 +91,9 @@ exports.createCourse = async (req, res) => {
       price,
       tag,
       category: categoryDetails._id,
+      year,
+      department,
+      courseLevel,
       thumbnail: thumbnailImage.secure_url,
       status: status,
       instructions,
@@ -357,10 +364,10 @@ exports.getFullCourseDetails = async (req, res) => {
       })
       .populate("category")
       .populate({
-        path: "assignmentsSubmitted",
+        path: 'assignmentsSubmitted',
         populate: {
-          path: "student",
-          model: "user", // Replace 'Student' with the actual model name
+          path: 'student',
+          model: 'user', // Replace 'Student' with the actual model name
         },
       })
       .populate("ratingAndReviews")
@@ -420,7 +427,6 @@ exports.getFullCourseDetails = async (req, res) => {
     })
   }
 }
-
 // Get a list of Course for a given Instructor
 exports.getInstructorCourses = async (req, res) => {
   try {

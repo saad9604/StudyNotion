@@ -41,6 +41,7 @@ exports.updateProfile = async (req, res) => {
     // Find the updated user details
     const updatedUserDetails = await User.findById(id)
       .populate("additionalDetails")
+      .populate("StudentDetails")
       .exec()
 
     return res.json({
@@ -99,6 +100,7 @@ exports.getAllUserDetails = async (req, res) => {
     const id = req.user.id
     const userDetails = await User.findById(id)
       .populate("additionalDetails")
+      .populate("studentDetails")
       .exec()
     console.log(userDetails)
     res.status(200).json({
