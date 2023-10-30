@@ -8,6 +8,7 @@ import { useSelector } from "react-redux"
 import { MdOutlinePersonPin } from "react-icons/md";
 import studynotionLogo from "../../assets/Logo/Logo-Small-Light.png"
 import { getMessageFromOpenAI } from "../../services/operations/chatAPI"
+import LoadingSpinner from "./LoadingSpinner"
 
 const Chatbot = () => {
     const { handleSubmit, register, reset } = useForm()
@@ -16,9 +17,11 @@ const Chatbot = () => {
 
     const { token } = useSelector((state) => state.auth)
     const { user } = useSelector((state) => state.profile)
+    const [loading, setloading] = useState(false);
 
     const handleOnSubmit = async (data) => {
         try {
+            setloading(true);
             const response = await getMessageFromOpenAI(data.query)
             let result = response?.data?.response
 
@@ -29,8 +32,10 @@ const Chatbot = () => {
 
             setMessages([...messages, newMessage])
             reset()
+            setloading(false);
         } catch (error) {
             console.error("Error fetching messages:", error)
+            setloading(false);
         }
     }
 
@@ -78,6 +83,7 @@ const Chatbot = () => {
 
                                     </div>
                                 </div>
+
                                 <div className="bg-green-500  items-start rounded-lg py-2 text-white">
                                     <div className="flex text-justify items-start gap-2 px-4 mr-2 md:px-4">
                                         <img
@@ -88,24 +94,30 @@ const Chatbot = () => {
                                         {message.response}
                                     </div>
                                 </div>
+
                             </div>
                         ))}
                     </div>
-
-                    <form onSubmit={handleSubmit(handleOnSubmit)}>
+                        <form onSubmit={handleSubmit(handleOnSubmit)}>
                         <div className="fixed bottom-0 flex border-t-2 border-richblack-900 py-3 w-full items-center gap-2 pl-5 md:px-3">
                             <input
                                 type="text"
                                 className="border-gray-300 h-[40px] w-[350px] rounded-lg border-none px-2 focus:outline-none"
                                 {...register("query")}
                             />
+                            {loading ? (<div className="-translate-x-1">
+                                <LoadingSpinner />
+                            </div>)
+                              : (
+                                    <button
+                                        type="submit"
+                                        className="-translate-x-3 cursor-pointer px-2 text-[25px] text-white"
+                                    >
+                                        <IoMdSend />
+                                    </button>
+                                )}
 
-                            <button
-                                type="submit"
-                                className="-translate-x-3 cursor-pointer px-2 text-[25px] text-white"
-                            >
-                                <IoMdSend />
-                            </button>
+
                         </div>
                     </form>
                 </div>
